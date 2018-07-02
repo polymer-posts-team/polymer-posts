@@ -1,0 +1,85 @@
+<dom-module id="login-posts">
+  <template>
+    <style>
+      :host {
+        display: block;
+        --paper-button: {
+          width: 90%;
+          margin: 15px auto;
+          display: block;
+          clear: both;
+        };
+      }
+      .center-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 350px;
+      }
+      .center-align{
+        text-align: center;
+      }
+      .card-header {
+        background-color: var(--paper-grey-100);
+        padding: 5px 25px;
+        color: #252525;
+      }
+      .card-actions {
+        text-align: center;
+        background-color: var(--paper-grey-200);
+      }
+      paper-card paper-progress {
+        width: 100%;
+        padding: 0;
+      }
+      .button-login {
+        background-color: var(--paper-green-500);
+        color: white;
+      }
+      .login-a {
+        color: var(--paper-green-500);
+        text-decoration: none;
+      }
+      #containerNotif {
+        height: 50px;
+      }
+    </style>
+    <paper-card elevation="2" animated-shadow="true" class="center-center">
+      <div class="card-header center-align">
+        <h4>Ingrese a su cuenta</h4>
+      </div>
+      <div class="card-content">
+        <form>
+          <paper-input id="inputUser" label="Usuario" value="{{user}}">
+          </paper-input>
+          <paper-input id="inputPass" label="Contraseña" type="password" value="{{password}}"></paper-input>
+          <paper-button raised class="button-login center-align" id="send">Inicar Sesión</paper-button>
+        </form>
+      </div>
+      <template is="dom-if" if="{{loading}}">
+        <paper-progress indeterminate></paper-progress>
+      </template>
+      <div class="card-actions" id="containerNotif">
+        <paper-toast id="loginNotification" class="fit-bottom" duration="2000"></paper-toast>
+      </div>
+    </paper-card>  
+  </template>
+
+  <script>
+    (function loginPosts(customElements) {
+      'use strict';
+
+      class LoginPosts extends Polymer.Element {
+        static get is() { return 'login-posts'; }
+        static get properties() {
+          return {
+            prop: String
+          }
+        }
+      }
+
+      customElements.define(LoginPosts.is, LoginPosts);
+    })(window.customElements);
+  </script>
+</dom-module>
