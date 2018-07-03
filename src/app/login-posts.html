@@ -51,13 +51,14 @@
       </div>
       <div class="card-content">
         <form>
-          <paper-input id="inputUser" label="Usuario" value="{{user}}">
+          <paper-input id="inputUser" label="Usuario" value="{{user}}" required auto-validate pattern="[a-zA-Z]*[a-zA-Z]@hotmail.com|[a-zA-Z]*[a-zA-Z]@gmail.com|[a-zA-Z]*[a-zA-Z]@yahoo.com" error-message="{{err}}">
           </paper-input>
-          <paper-input id="inputPass" label="Contraseña" type="password" value="{{password}}"></paper-input>
-          <paper-button raised class="button-login center-align" id="send">Inicar Sesión</paper-button>
+          <paper-input id="inputPass" label="Contraseña" type="password" value="{{password}}" required auto-validate error-message="necesita una contraseña!"></paper-input>
+          <!-- Boton de login -->
+          <paper-button raised class="button-login center-align" id="send" on-click="vali" >Inicar Sesión</paper-button>
         </form>
       </div>
-      <template is="dom-if" if="{{loading}}">
+      <template is="dom-if" if="{{val}}">
         <paper-progress indeterminate></paper-progress>
       </template>
       <div class="card-actions" id="containerNotif">
@@ -74,7 +75,32 @@
         static get is() { return 'login-posts'; }
         static get properties() {
           return {
-            prop: String
+            prop: String,
+            user:{
+              type: String
+            },
+            val:{
+              type: Boolean
+            },
+            err:{
+              type: String,
+              value: 'termina de ingresar tu correo'
+            }
+          }
+        }
+        vali(){
+          let us1 = /\w+@gmail.com/;
+          let us2 = /\w+@hotmail.com/;
+          let us3 = /\w+@yahoo.com/;
+          if(us1.test(this.user)||us2.test(this.user)||us3.test(this.user)){
+            this.val = true;
+            this.err = 'termina de ingresar tu correo'
+          }
+            else{
+            this.val = false;
+            this.err = 'correo invalido'
+          }if(this.user==''){
+            this.err = 'ntermina de ingresar tu correo'
           }
         }
       }
