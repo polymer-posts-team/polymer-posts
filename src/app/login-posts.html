@@ -58,13 +58,22 @@
         <paper-input label="Contraseña" type="password" id="userPassword" value="{{password}}" required auto-validate></paper-input>
         <paper-button raised class="button-login center-align" id="send" on-click="validationForm" >Inicar Sesión</paper-button>
       </div>
-      <template is="dom-if" if="{{val}}">
+      <template is="dom-if" if="{{loading}}">
         <paper-progress indeterminate></paper-progress>
       </template>
       <div class="card-actions" id="containerNotif">
         <paper-toast id="loginNotification" class="fit-bottom" duration="3000" text="[[textError]]"></paper-toast>
       </div>
     </paper-card>
+    <iron-ajax
+      id="ajaxLogin"
+      url="https://posts-services.herokuapp.com/login"
+      body="_getLoginBody"
+      method="POST"
+      handle-as="json"
+      on-response="handleResponse"
+      loading="{{loading}}">
+    </iron-ajax>
   </template>
 
   <script>
@@ -75,7 +84,14 @@
         static get is() { return 'login-posts'; }
         static get properties() {
           return {
-            
+            session: {
+              type: Boolean,
+              notify: true
+            },
+            route: {
+              type: Object,
+              notify: true
+            }
           }
         }
         ready() {
@@ -85,8 +101,21 @@
         //Funcion que valida la entrada del correo para el resultyado del dom-if, con el cambio de la frase del paper-input
         validationForm(e){
           if (this.$.userEmail.validate() && this.$.userPassword.validate()) {
+            this.set('loading', true);
             console.log('Manda peticion del Login');
+            this.handleResponse(true);
           } else this.showToast('Ingresa la Informacion correcta.');
+        }
+
+        handleResponse(response) {
+          if (response) {
+            setTimeout(() => {
+              this.showToast('¡Bienvenido!');
+              this.set('session', true);
+              localStorage.userEmail = this.user;
+              this.set('route.page', 'posts');
+            }, 3000);
+          }
         }
 
         showToast(toastText) {
