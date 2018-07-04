@@ -1,3 +1,4 @@
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 <dom-module id="login-posts">
   <template>
     <style>
@@ -51,13 +52,15 @@
       </div>
       <div class="card-content">
         <form>
-          <paper-input id="inputUser" label="Usuario" value="{{user}}" required auto-validate pattern="[a-zA-Z]*[a-zA-Z]@hotmail.com|[a-zA-Z]*[a-zA-Z]@gmail.com|[a-zA-Z]*[a-zA-Z]@yahoo.com" error-message="{{err}}">
+          <paper-input id="inputUser" label="Usuario" value="{{user}}" required auto-validate pattern="[a-zA-Z0-9]*[a-zA-Z0-9]@hotmail.com|[a-zA-Z0-9]*[a-zA-Z0-9]@gmail.com|[a-zA-Z0-9]*[a-zA-Z0-9]@yahoo.com" error-message="{{err}}">
           </paper-input>
           <paper-input id="inputPass" label="Contraseña" type="password" value="{{password}}" required auto-validate error-message="necesita una contraseña!"></paper-input>
           <!-- Boton de login -->
           <paper-button raised class="button-login center-align" id="send" on-click="vali" >Inicar Sesión</paper-button>
+          <iron-ajax method="post" url="https://posts-services.herokuapp.com/users" last-response="{{res}}" auto></iron-ajax>
         </form>
       </div>
+      <!-- SI ES VERDADERA LA VALIDACION -->
       <template is="dom-if" if="{{val}}">
         <paper-progress indeterminate></paper-progress>
       </template>
@@ -88,6 +91,7 @@
             }
           }
         }
+        //Funcion que valida la entrada del correo para el resultyado del dom-if, con el cambio de la frase del paper-input
         vali(){
           let us1 = /\w+@gmail.com/;
           let us2 = /\w+@hotmail.com/;
@@ -100,8 +104,10 @@
             this.val = false;
             this.err = 'correo invalido'
           }if(this.user==''){
-            this.err = 'ntermina de ingresar tu correo'
+            this.err = 'termina de ingresar tu correo'
           }
+          
+          console.log(this.res);
         }
       }
 
