@@ -28,11 +28,13 @@
       }
       .card-actions {
         text-align: center;
-        background-color: var(--paper-grey-200);
       }
       paper-card paper-progress {
         width: 100%;
         padding: 0;
+      }
+      paper-toast {
+        position: initial;
       }
       .button-login {
         background-color: var(--paper-green-500);
@@ -51,23 +53,18 @@
         <h4>Ingrese a su cuenta</h4>
       </div>
       <div class="card-content">
-        <form>
-          <paper-input id="inputUser" label="Usuario" value="{{user}}" required auto-validate pattern="[a-zA-Z0-9]*[a-zA-Z0-9]@hotmail.com|[a-zA-Z0-9]*[a-zA-Z0-9]@gmail.com|[a-zA-Z0-9]*[a-zA-Z0-9]@yahoo.com" error-message="{{err}}">
-          </paper-input>
-          <paper-input id="inputPass" label="Contraseña" type="password" value="{{password}}" required auto-validate error-message="necesita una contraseña!"></paper-input>
-          <!-- Boton de login -->
-          <paper-button raised class="button-login center-align" id="send" on-click="vali" >Inicar Sesión</paper-button>
-          <iron-ajax method="post" url="https://posts-services.herokuapp.com/users" last-response="{{res}}" auto></iron-ajax>
-        </form>
+        <paper-input id="userEmail" label="Email" value="{{user}}" required auto-validate pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+        </paper-input>
+        <paper-input label="Contraseña" type="password" id="userPassword" value="{{password}}" required auto-validate></paper-input>
+        <paper-button raised class="button-login center-align" id="send" on-click="validationForm" >Inicar Sesión</paper-button>
       </div>
-      <!-- SI ES VERDADERA LA VALIDACION -->
       <template is="dom-if" if="{{val}}">
         <paper-progress indeterminate></paper-progress>
       </template>
       <div class="card-actions" id="containerNotif">
-        <paper-toast id="loginNotification" class="fit-bottom" duration="2000"></paper-toast>
+        <paper-toast id="loginNotification" class="fit-bottom" duration="3000" text="[[textError]]"></paper-toast>
       </div>
-    </paper-card>  
+    </paper-card>
   </template>
 
   <script>
@@ -78,36 +75,23 @@
         static get is() { return 'login-posts'; }
         static get properties() {
           return {
-            prop: String,
-            user:{
-              type: String
-            },
-            val:{
-              type: Boolean
-            },
-            err:{
-              type: String,
-              value: 'termina de ingresar tu correo'
-            }
+            
           }
         }
+        ready() {
+          super.ready();
+          this.$.loginNotification.fitInto = this.$.containerNotif;
+        }
         //Funcion que valida la entrada del correo para el resultyado del dom-if, con el cambio de la frase del paper-input
-        vali(){
-          let us1 = /\w+@gmail.com/;
-          let us2 = /\w+@hotmail.com/;
-          let us3 = /\w+@yahoo.com/;
-          if(us1.test(this.user)||us2.test(this.user)||us3.test(this.user)){
-            this.val = true;
-            this.err = 'termina de ingresar tu correo'
-          }
-            else{
-            this.val = false;
-            this.err = 'correo invalido'
-          }if(this.user==''){
-            this.err = 'termina de ingresar tu correo'
-          }
-          
-          console.log(this.res);
+        validationForm(e){
+          if (this.$.userEmail.validate() && this.$.userPassword.validate()) {
+            console.log('Manda peticion del Login');
+          } else this.showToast('Ingresa la Informacion correcta.');
+        }
+
+        showToast(toastText) {
+          this.set('textError', toastText);
+          this.$.loginNotification.open();
         }
       }
 
