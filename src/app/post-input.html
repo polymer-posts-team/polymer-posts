@@ -1,0 +1,84 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-input/paper-input-char-counter.html">
+<link rel="import" href="/bower_components/paper-input/paper-textarea.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+
+
+<dom-module id="post-input">
+    <template>
+            <custom-style>
+                    <style is="custom-style">
+                      textarea.text {
+                        @apply --paper-input-container-shared-input-style;
+                      }
+                    </style>
+                  </custom-style>
+        <style>
+            .post {
+                width: 500px;
+                top: 50%;
+                left: 50%;
+                display: flex;
+                flex-direction: column;
+                padding: 30px;
+                text-align: justify;
+                
+            }
+
+            paper-input.custom {
+                --paper-input-container-underline: {
+                    display: none;
+                }
+                ;
+            }
+            paper-input-container.custom {
+                --paper-input-container-underline: {
+                    display: none;
+                }
+                ;
+            }
+
+            paper-textarea.cont {
+                --paper-input-container-underline: {
+                    display: none;
+                }
+                ;
+                --paper-input-container-underline-focus: {
+                    display: none;
+                }
+                ;
+            }
+            .text{
+                height: 200px;
+            }
+        </style>
+        <paper-card class="post">
+            <div id="title">
+                <paper-input class="custom" label="TITULO" always-float-label char-counter maxlength="140"required auto-validate error-message="tu post requiere un muy buen titulo"></paper-input>
+            </div>
+            <div id="content">
+                <paper-textarea class="cont" label="Contenido" no-label-float char-counter maxlength="240" rows="2" required auto-validate error-message="necesitas plasmar tus ideas"></paper-textarea>
+            </div>
+        </paper-card>
+    </template>
+    <script>
+        (function postInput(customElements) {
+
+            'use strict';
+            class PostInput extends Polymer.Element {
+                static get is() { return 'post-input' };
+                static get properties() {
+                    return {}
+                }
+            }
+            customElements.define(PostInput.is, PostInput)
+        }
+
+        )(window.customElements);
+    </script>
+
+</dom-module>
