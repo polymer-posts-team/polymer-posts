@@ -1,7 +1,4 @@
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
-<link rel="import" href="/bower_components/neon-animation/neon-animation.html">
-<link rel="import" href="/bower_components/neon-animation/web-animations.html">
-<link rel="import" href="/bower_components/neon-animation/neon-animation-behavior.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">2
@@ -10,13 +7,10 @@
 <link rel="import" href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="/bower_components/app-layout/demo/sample-content.html">
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="/bower_components/app-layout/demo/sample-content.html">
 <link rel="import" href="/bower_components/paper-avatar/paper-avatar.html">
-<link rel="import" href="/bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
@@ -53,6 +47,14 @@
         height: calc(100% - 80px);
         overflow: auto;
       }
+      .user-menu {
+        position: fixed;
+        right: 10px;
+        top: 65px;
+      }
+      .item-text {
+        color: black;
+      }
     </style>
 
     <app-header-layout>
@@ -61,14 +63,12 @@
         <app-toolbar>
           <paper-icon-button id="toggle" icon="menu"></paper-icon-button>
           <div main-title></div>
-          <!-- <div main-title>Twitter App</div> -->
-          <paper-menu-button>
-            <paper-icon-button icon="social:person-outline" slot="dropdown-trigger" alt="menu"></paper-icon-button>
-            <paper-listbox slot="dropdown-content">
-              <paper-item>Cerrar Sesion</paper-item>
-              <paper-item>beta</paper-item>
-            </paper-listbox>
-          </paper-menu-button>
+          <paper-avatar id="customAvatar" on-click="toggleMenu"></paper-avatar>
+          <div class="user-menu" id="userMenu">
+            <paper-card>
+                <paper-item class="item-text" on-click="logOut">Cerrar Sesion</paper-item>
+            </paper-card>
+          </div>
         </app-toolbar>
       </app-header>
 
@@ -77,16 +77,23 @@
         <app-drawer slot="drawer">
           <div class="drawer-content">
             <template is="dom-repeat" items="[[users]]">
-              <component-card data=[[item]]></component-card>
+              <component-card data=[[item]] posts="[[item.posts]]" posts-selected="{{userSelected}}"></component-card>
             </template>
           </div>
         </app-drawer>
 
         <div class="content-posts">
-          <post-input></post-input>
+          <div class="form-input">
+            <post-input></post-input>  
+          </div>
+          
+          <div class="list-posts">
+            <template is="dom-repeat" items="[[userSelected]]">
+              <p>[[item.body]]</p>
+            </template>
+          </div>
         </div>
         
-        <sample-content size="100"></sample-content>
       </app-drawer-layout>
     </app-header-layout>
 
@@ -106,13 +113,34 @@
         static get is() { return 'polymer-posts'; }
         static get properties() {
           return {
-            prop: String
+            session: {
+              type: Boolean,
+              notify: true
+            },
+            route: {
+              type: Object,
+              notify: true
+            },
+            userSelected: Array
           }
         }
+
+        static get observers() {
+          return [
+            'userSelectedObserver(userSelected)'
+          ]
+        }
+
+        userSelectedObserver(userSelected) {
+          console.log(userSelected);
+        }
+
         ready() {
           super.ready();
           this.$.toggle.addEventListener('click', e => this.sidebarMove(e));
+          this.$.userMenu.style.display = 'none';
         }
+
         sidebarMove(e){
           if (this.$.drawerLayout.forceNarrow || !this.$.drawerLayout.narrow) {
             this.$.drawerLayout.forceNarrow = !this.$.drawerLayout.forceNarrow;
@@ -121,6 +149,17 @@
           }
         }
 
+        toggleMenu(e) {
+          if (this.$.userMenu.style.display == 'none') this.$.userMenu.style.display = 'block';
+            else this.$.userMenu.style.display = 'none';
+        }
+
+        logOut(e) {
+          localStorage.clear();
+          this.set('session', false);
+          this.set('route.page', 'login');
+          this.toggleMenu(e);
+        }
       }
 
       customElements.define(PolymerPosts.is, PolymerPosts);

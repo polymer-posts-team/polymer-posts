@@ -16,7 +16,7 @@
 
     <iron-pages selected="[[page]]" attr-for-selected="page" fallback-selection="posts">
       <login-posts page="login" session="{{session}}" route="{{routeData}}"></login-posts>
-      <polymer-posts page="posts"></polymer-posts>
+      <polymer-posts page="posts" session="{{session}}" route="{{routeData}}"></polymer-posts>
     </iron-pages>
   </template>
 

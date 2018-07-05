@@ -53,7 +53,7 @@
         <h4>Ingrese a su cuenta</h4>
       </div>
       <div class="card-content">
-        <paper-input id="userEmail" label="Email" value="{{user}}" required auto-validate pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+        <paper-input id="userEmail" label="Email" value="{{user}}" required auto-validate pattern="[a-z0-9._%+-A-Z]+@[a-z0-9.-]+\.[a-z]{2,3}$">
         </paper-input>
         <paper-input label="Contraseña" type="password" id="userPassword" value="{{password}}" required auto-validate></paper-input>
         <paper-button raised class="button-login center-align" id="send" on-click="validationForm" >Inicar Sesión</paper-button>
@@ -62,18 +62,9 @@
         <paper-progress indeterminate></paper-progress>
       </template>
       <div class="card-actions" id="containerNotif">
-        <paper-toast id="loginNotification" class="fit-bottom" duration="3000" text="[[textError]]"></paper-toast>
+        <paper-toast id="loginNotification" class="fit-bottom" duration="2000" text="[[textNotification]]"></paper-toast>
       </div>
     </paper-card>
-    <iron-ajax
-      id="ajaxLogin"
-      url="https://posts-services.herokuapp.com/login"
-      body="_getLoginBody"
-      method="POST"
-      handle-as="json"
-      on-response="handleResponse"
-      loading="{{loading}}">
-    </iron-ajax>
   </template>
 
   <script>
@@ -101,26 +92,57 @@
         //Funcion que valida la entrada del correo para el resultyado del dom-if, con el cambio de la frase del paper-input
         validationForm(e){
           if (this.$.userEmail.validate() && this.$.userPassword.validate()) {
-            this.set('loading', true);
-            console.log('Manda peticion del Login');
-            this.handleResponse(true);
+            this.setLoading(true);
+            this.sendRequest();
           } else this.showToast('Ingresa la Informacion correcta.');
         }
+        
+        sendRequest() {
+          fetch('https://posts-services.herokuapp.com/users')
+            .then(resp => resp.json())
+            .then(users => this.userFlux(this.getUserValid(users)));
+        }
+        //Funcion que recibe la data y valida que el usuario exista y la contraseña sea correcta
+        getUserValid(users){
+          for (let user of users) {
+            if(user && user.email == this.user && user.password == this.password) {
+              return { 
+                valid: true,
+                email: user.email,
+                name: user.name,
+                address: user.address,
+                phone: user.phone
+              };
+            }
+          }
+          return { valid: false };
+        }
 
-        handleResponse(response) {
-          if (response) {
-            setTimeout(() => {
-              this.showToast('¡Bienvenido!');
-              this.set('session', true);
-              localStorage.userEmail = this.user;
-              this.set('route.page', 'posts');
-            }, 3000);
+        userFlux(userObject) {
+          if (userObject.valid) {
+            this.showToast(`¡Bienvenido ${userObject.name}! `);
+            this.set('session', true);
+
+            localStorage.email = userObject.email;
+            localStorage.name = userObject.name;
+            localStorage.address = userObject.address;
+            localStorage.phone = userObject.phone;
+            
+            this.set('route.page', 'posts');
+            this.setLoading(false);
+          } else {
+            this.showToast('Usuario o contraseña Incorrectos');
+            this.setLoading(false);
           }
         }
 
         showToast(toastText) {
-          this.set('textError', toastText);
+          this.set('textNotification', toastText);
           this.$.loginNotification.open();
+        }
+
+        setLoading(value) {
+          this.set('loading', value);
         }
       }
 

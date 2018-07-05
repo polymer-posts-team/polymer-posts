@@ -46,10 +46,10 @@
 
   <paper-card>
     <div class="card-content">
-      <h1>Name: [[data.name]]</h1>
-      <h1>E-Mail: [[data.email]]</h1>
-      <h1>Address: [[data.address]]</h1>
-      <h1>Phone: [[data.phone]]</h1>
+      <h1>Nombre: [[data.name]]</h1>
+      <h1>Email: [[data.email]]</h1>
+      <h1>Direccion: [[data.address]]</h1>
+      <h1>Telefono: [[data.phone]]</h1>
     </div>
 
     <div class="best-friends">
@@ -72,9 +72,25 @@
       static get is() { return 'component-card'; }
       static get properties() {
         return {
-
+          posts: {
+            type: Array,
+            computed: '_getPostsUser(data)'
+          },
+          postsSelected: {
+            type: Array,
+            notify: true
+          },
+          data: Array
         }
       }
+      _getPostsUser(data) {
+        if (data) return data.posts;
+      }
+      connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('click', e => this.set('postsSelected', this.posts) );
+      }
+
     }
 
 
