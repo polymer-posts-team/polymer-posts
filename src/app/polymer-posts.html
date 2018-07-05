@@ -1,4 +1,5 @@
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
+<<<<<<< HEAD
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
@@ -6,13 +7,97 @@
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="login-posts.html">
 <link rel="import" href="post-input.html">
+=======
+<link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="/bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="/bower_components/app-layout/demo/sample-content.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="/bower_components/app-layout/demo/sample-content.html">
+<link rel="import" href="/bower_components/paper-avatar/paper-avatar.html">
+<link rel="import" href="/bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="component-card.html">
+>>>>>>> f70f23d695380caa43bb2989b6adaf66f518a635
 
 <dom-module id="polymer-posts">
   <template>
     <style>
+      :host{
+        --paper-avatar-background: #009688;
+      }
+      app-header {
+        background-color: #607D8B;
+        color: #fff;
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: #fff;
+      }
+      app-drawer-layout {
+        --app-drawer-layout-content-transition: margin 0.2s;
+      }
+      app-drawer {
+        --app-drawer-content-container: {
+          background-color: #eee;
+        }
+      }
+      .drawer-content {
+        margin-top: 80px;
+        height: calc(100% - 80px);
+        overflow: auto;
+      }
     </style>
+<<<<<<< HEAD
     <post-input></post-input>
     <login-posts></login-posts>
+=======
+
+    <app-header-layout>
+
+      <app-header fixed effects="waterfall" slot="header">
+        <app-toolbar>
+          <paper-icon-button id="toggle" icon="menu"></paper-icon-button>
+          <div main-title></div>
+          <!-- <div main-title>Twitter App</div> -->
+          <paper-avatar mini icon="social:person-outline"></paper-avatar>
+          <paper-menu-button>
+            <paper-icon-button icon="menu" slot="dropdown-trigger" alt="menu"></paper-icon-button>
+            <paper-listbox slot="dropdown-content">
+              <paper-item>alpha</paper-item>
+              <paper-item>beta</paper-item>
+              <paper-item>gamma</paper-item>
+              <paper-item>delta</paper-item>
+              <paper-item>epsilon</paper-item>
+            </paper-listbox>
+          </paper-menu-button>
+        </app-toolbar>
+      </app-header>
+
+      <app-drawer-layout id="drawerLayout" force-narrow>
+
+        <app-drawer slot="drawer">
+          <div class="drawer-content">
+            <template is="dom-repeat" items="[[users]]">
+              <component-card data=[[item]]></component-card>
+            </template>
+          </div>
+        </app-drawer>
+        
+        <sample-content size="100"></sample-content>
+      </app-drawer-layout>
+    </app-header-layout>
+
+    <iron-ajax 
+      auto 
+      url="https://posts-services.herokuapp.com/users" 
+      hundle-s="json" 
+      last-response="{{users}}">
+    </iron-ajax>
+>>>>>>> f70f23d695380caa43bb2989b6adaf66f518a635
   </template>
 
   <script>
@@ -26,6 +111,18 @@
             prop: String
           }
         }
+        ready() {
+          super.ready();
+          this.$.toggle.addEventListener('click', e => this.sidebarMove(e));
+        }
+        sidebarMove(e){
+          if (this.$.drawerLayout.forceNarrow || !this.$.drawerLayout.narrow) {
+            this.$.drawerLayout.forceNarrow = !this.$.drawerLayout.forceNarrow;
+          } else {
+            this.$.drawerLayout.drawer.toggle();
+          }
+        }
+
       }
 
       customElements.define(PolymerPosts.is, PolymerPosts);
