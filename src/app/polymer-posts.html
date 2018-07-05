@@ -11,6 +11,8 @@
 <link rel="import" href="/bower_components/app-layout/demo/sample-content.html">
 <link rel="import" href="/bower_components/paper-avatar/paper-avatar.html">
 <link rel="import" href="/bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="component-card.html">
 
 <dom-module id="polymer-posts">
   <template>
@@ -65,19 +67,22 @@
 
         <app-drawer slot="drawer">
           <div class="drawer-content">
-            <paper-card>
-              <div class="card-content">
-                Lista de Usuarios
-              </div>
-            </paper-card>
+            <template is="dom-repeat" items="[[users]]">
+              <component-card data=[[item]]></component-card>
+            </template>
           </div>
         </app-drawer>
         
         <sample-content size="100"></sample-content>
-
       </app-drawer-layout>
-
     </app-header-layout>
+
+    <iron-ajax 
+      auto 
+      url="https://posts-services.herokuapp.com/users" 
+      hundle-s="json" 
+      last-response="{{users}}">
+    </iron-ajax>
   </template>
 
   <script>
