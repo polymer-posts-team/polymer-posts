@@ -6,13 +6,16 @@
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="component-card.html">
 <link rel="import" href="login-posts.html">
 <link rel="import" href="polymer-posts.html">
 
 <dom-module id="route-container">
   <template>
-    <style>
-    </style>
+     </style>
+
+    <iron-ajax auto url="https://posts-services.herokuapp.com/users" hundle-s="json" last-response="{{data}}"></iron-ajax>
 
     <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}"></app-route>
@@ -21,6 +24,10 @@
       <login-posts page="login" session="{{session}}" route="{{routeData}}"></login-posts>
       <polymer-posts page="posts"></polymer-posts>
     </iron-pages>
+
+      <template is="dom-repeat" items="{{data}}">
+        <component-card data=[[item]]></component-card>
+      </template>
 
   </template>
 
@@ -34,6 +41,7 @@
           return {
             session: Boolean,
             routeData: Object,
+            data: Object,
             page: String
           }
         }
