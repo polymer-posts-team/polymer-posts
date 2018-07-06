@@ -82,7 +82,7 @@
         </app-toolbar>
       </app-header>
 
-      <app-drawer-layout id="drawerLayout" force-narrow>
+      <app-drawer-layout id="drawerLayout"  >
         <app-drawer slot="drawer">
           <div class="drawer-content" id="drawerContent">
             <div class="current-user-card">
@@ -94,8 +94,8 @@
           </div>
         </app-drawer>
 
-        <div class="content-posts">
-          <template is="dom-if" if="{{currentUserSelected}}">
+        <div class="content-posts" >
+          <template is="dom-if" if="{{currentUserSelected}}" >
             <div class="form-input">
               <post-input></post-input>  
             </div>
@@ -155,8 +155,9 @@
           super.ready();
           this.$.toggle.addEventListener('click', e => this.sidebarMove(e));
           this.$.userMenu.style.display = 'none';
-          //QUITAR
+          this.$
           this.$.getUsers.generateRequest();
+          this.addClassSelected();
         }
 
         sidebarMove(e){

@@ -28,6 +28,9 @@
       .blue {
         color: var(--paper-blue-500);
       }
+      .black {
+        color: var(--paper-black-500);
+      }
       .date {
         display: flex;
         font-size: 15px;
@@ -35,7 +38,7 @@
         flex-direction: column;
       }
     </style>
-    <paper-card>
+    <paper-card id="card" >
       <div class="card-content current">
         <div class="title">
           <h2>[[post.title]]</h2>
@@ -54,6 +57,7 @@
           <paper-icon-button icon="favorite" id="red" on-click="addClasSelected" class="heart"></paper-icon-button>
           <paper-icon-button icon="bookmark" id="blue" on-click="addClasSelected" class="book"></paper-icon-button>
           <paper-icon-button icon="social:share" id="blueBlack" class="share"></paper-icon-button>
+          <paper-icon-button icon="delete" id="black" on-click="deletePost" class="delete"></paper-icon-button>
         </div>
       </div>
     </paper-card>
@@ -79,6 +83,9 @@
       addClasSelected(e) {
         if (e.target.className.indexOf(e.target.id) > 0) e.target.classList.remove(e.target.id);
           else e.target.classList.add(e.target.id);
+      }
+      deletePost(e){
+        this.shadowRoot.querySelector('#card').style = 'display:none;'
       }
      
     }
