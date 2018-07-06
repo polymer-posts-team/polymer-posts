@@ -1,9 +1,3 @@
-<link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
-
-
 <dom-module id="component-card">
   <template>
     <style>
@@ -42,25 +36,49 @@
         --iron-icon-height: 16px;
         color: var(--paper-amber-500);
       }
+      .customAvatar {
+        --paper-avatar-background: var(--google-blue-300);
+        @apply(--shadow-none);
+      }
+      .customAvatar:hover {
+        @apply(--shadow-elevation-8dp);
+      }
+      .current {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+      }
     </style>
+    <template is="dom-if" if="[[currentUser]]">
+      <paper-card>
+        <div class="card-content current">
+          <paper-avatar class="customAvatar" icon="social:person"></paper-avatar>
+          <h1>[[data.name]]</h1>
+          <h1>[[data.email]]</h1>
+          <h1>[[data.address]]</h1>
+        </div>
+      </paper-card>
+    </template>
 
-  <paper-card>
-    <div class="card-content">
-      <h1>Nombre: [[data.name]]</h1>
-      <h1>Email: [[data.email]]</h1>
-      <h1>Direccion: [[data.address]]</h1>
-      <h1>Telefono: [[data.phone]]</h1>
-    </div>
+    <template is="dom-if" if="[[!currentUser]]">
+      <paper-card>
+        <div class="card-content current">
+          <h1>Nombre: [[data.name]]</h1>
+          <h1>Email: [[data.email]]</h1>
+          <h1>Direccion: [[data.address]]</h1>
+          <h1>Telefono: [[data.phone]]</h1>
+        </div>
 
-    <div class="best-friends">
-      <iron-icon class="star" icon="star"></iron-icon>
-      <iron-icon class="star" icon="star"></iron-icon>
-      <iron-icon class="star" icon="star"></iron-icon>
-      <iron-icon class="star" icon="star"></iron-icon>
-      <iron-icon class="star" icon="star"></iron-icon>
-    </div>
-
-  </paper-card>
+        <div class="card-actions">
+          <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+          <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+          <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+          <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+          <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+        </div>
+      </paper-card>
+    </template>
   </template>
 
   <script>
@@ -80,6 +98,14 @@
             type: Array,
             notify: true
           },
+          currentUser: {
+            type: Boolean,
+            value: false
+          },
+          currentUserSelected: {
+            type: Boolean,
+            notify: true
+          },
           data: Array
         }
       }
@@ -88,7 +114,11 @@
       }
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('click', e => this.set('postsSelected', this.posts) );
+        this.addEventListener('click', e =>  { 
+          if (this.currentUser) this.set('currentUserSelected', true);
+            else this.set('currentUserSelected', false);
+          this.set('postsSelected', this.posts);
+        });
       }
 
     }

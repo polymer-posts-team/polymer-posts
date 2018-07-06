@@ -8,6 +8,7 @@
 <link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="/bower_components/paper-avatar/paper-avatar.html">
@@ -15,18 +16,12 @@
 <link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="component-card.html">
+<link rel="import" href="post-card.html">
 <link rel="import" href="post-input.html">
 
 <dom-module id="polymer-posts">
   <template>
     <style>
-      #customAvatar {
-         --paper-avatar-background: var(--google-blue-300);
-         @apply(--shadow-none);
-       }
-       #customAvatar:hover {
-         @apply(--shadow-elevation-8dp);
-       }
       app-header {
         background-color: #607D8B;
         color: #fff;
@@ -55,6 +50,19 @@
       .item-text {
         color: black;
       }
+      component-card {
+        margin: 5px;
+      }
+      .selected {
+        box-shadow: 0px 0px 0px 2px #607D8B;
+      }
+      #customAvatar {
+        --paper-avatar-background: var(--google-blue-300);
+        @apply(--shadow-none);
+      }
+      #customAvatar:hover {
+        @apply(--shadow-elevation-8dp);
+      }
     </style>
 
     <app-header-layout>
@@ -66,7 +74,7 @@
           <paper-avatar id="customAvatar" on-click="toggleMenu"></paper-avatar>
           <div class="user-menu" id="userMenu">
             <paper-card>
-                <paper-item class="item-text" on-click="logOut">Cerrar Sesion</paper-item>
+              <paper-item class="item-text" on-click="logOut">Cerrar Sesion</paper-item>
             </paper-card>
           </div>
         </app-toolbar>
@@ -76,20 +84,25 @@
 
         <app-drawer slot="drawer">
           <div class="drawer-content">
+            <div class="current-user-card">
+              <component-card class="component-card" data=[[currentUser]] posts="[[currentUser.posts]]" posts-selected="{{userSelected}}" current-user current-user-selected="{{currentUserSelected}}"></component-card>
+            </div>
             <template is="dom-repeat" items="[[users]]">
-              <component-card data=[[item]] posts="[[item.posts]]" posts-selected="{{userSelected}}"></component-card>
+              <component-card class="component-card" data=[[item]] posts="[[item.posts]]" posts-selected="{{userSelected}}" on-click="addClassSelected" current-user-selected="{{currentUserSelected}}"></component-card>
             </template>
           </div>
         </app-drawer>
 
         <div class="content-posts">
-          <div class="form-input">
-            <post-input></post-input>  
-          </div>
+          <template is="dom-if" if="{{currentUserSelected}}">
+            <div class="form-input">
+              <post-input></post-input>  
+            </div>
+          </template>
           
           <div class="list-posts">
             <template is="dom-repeat" items="[[userSelected]]">
-              <p>[[item.body]]</p>
+              <post-card post="[[item]]"></post-card>
             </template>
           </div>
         </div>
@@ -98,10 +111,10 @@
     </app-header-layout>
 
     <iron-ajax 
-      auto 
+      id="getUsers" 
       url="https://posts-services.herokuapp.com/users" 
       hundle-s="json" 
-      last-response="{{users}}">
+      on-response="handleResponse">
     </iron-ajax>
   </template>
 
@@ -127,18 +140,22 @@
 
         static get observers() {
           return [
-            'userSelectedObserver(userSelected)'
+            'sessionObserver(session)'
           ]
         }
 
-        userSelectedObserver(userSelected) {
-          console.log(userSelected);
+        sessionObserver(session) {
+          if (session) {
+            this.$.getUsers.generateRequest();
+          }
         }
 
         ready() {
           super.ready();
           this.$.toggle.addEventListener('click', e => this.sidebarMove(e));
           this.$.userMenu.style.display = 'none';
+          //QUITAR
+          this.$.getUsers.generateRequest();
         }
 
         sidebarMove(e){
@@ -159,6 +176,21 @@
           this.set('session', false);
           this.set('route.page', 'login');
           this.toggleMenu(e);
+        }
+
+        handleResponse(response) {
+          let withoutUsersNull = response.detail.response.filter( d => d != null );
+          this.set('users', withoutUsersNull.filter( l => l.email != localStorage.email ));
+          this.set('currentUser', withoutUsersNull.filter( a => a.email == localStorage.email )[0]);
+          console.log(this.currentUser);
+          console.log(this.users);
+        }
+
+        addClassSelected(e) {
+          //console.log(Polymer.dom(this).getElementsByClassName('component-card'));
+          //console.log(Polymer.dom(this).childNodes);
+          
+          //e.target.classList.add('selected');
         }
       }
 

@@ -89,7 +89,7 @@
           super.ready();
           this.$.loginNotification.fitInto = this.$.containerNotif;
         }
-        //Funcion que valida la entrada del correo para el resultyado del dom-if, con el cambio de la frase del paper-input
+
         validationForm(e){
           if (this.$.userEmail.validate() && this.$.userPassword.validate()) {
             this.setLoading(true);
@@ -102,8 +102,9 @@
             .then(resp => resp.json())
             .then(users => this.userFlux(this.getUserValid(users)));
         }
-        //Funcion que recibe la data y valida que el usuario exista y la contraseña sea correcta
+
         getUserValid(users){
+          console.log(users);
           for (let user of users) {
             if(user && user.email == this.user && user.password == this.password) {
               return { 
