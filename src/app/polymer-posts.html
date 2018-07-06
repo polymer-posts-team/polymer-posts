@@ -189,7 +189,7 @@
           let withoutUsersNull = data.filter( d => d != null );
           this.set('users', withoutUsersNull.filter( l => l.email != localStorage.email ));
           this.set('currentUser', withoutUsersNull.filter( a => a.email == localStorage.email )[0]);
-          console.log(this.currentUser);
+          this.set('currentUser.posts', withoutUsersNull.filter( a => a.email == localStorage.email )[0].posts);
         }
 
         addClassSelected(e) {
