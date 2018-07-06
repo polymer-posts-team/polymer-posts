@@ -7,13 +7,32 @@
         background-color: whitesmoke;
       }
       .heart {
-        color: var(--paper-red-500);
+        color: #f9dbdb;
       }
       .share {
-        color: var(--paper-blue-700); 
+        color: var(--paper-blue-300); 
       }
       .book {
+        color: var(--paper-blue-100);
+      }
+      .title {
+        color: #607c8a;
+        font-size: 15px;
+      }
+      .body {
+        font-size: 15px;
+      }
+      .red {
+        color: var(--paper-red-500);
+      }
+      .blue {
         color: var(--paper-blue-500);
+      }
+      .date {
+        display: flex;
+        font-size: 15px;
+        margin-top: 20px;
+        flex-direction: column;
       }
     </style>
     <paper-card>
@@ -24,13 +43,17 @@
         <div class="body">
           <label>[[post.body]]</label>
         </div>
+        <div class="date">
+          <label>Date: [[_getDateFormat(post.date)]]</label>
+          <label>Time: [[_getTimeFormat(post.date)]]</label>
+        </div>
       </div>
 
       <div class="card-actions">
         <div class="card-actions">
-          <paper-icon-button icon="favorite" class="heart"></paper-icon-button>
-          <paper-icon-button icon="bookmark" class="book"></paper-icon-button>
-          <paper-icon-button icon="social:share" class="share"></paper-icon-button>
+          <paper-icon-button icon="favorite" id="red" on-click="addClasSelected" class="heart"></paper-icon-button>
+          <paper-icon-button icon="bookmark" id="blue" on-click="addClasSelected" class="book"></paper-icon-button>
+          <paper-icon-button icon="social:share" id="blueBlack" class="share"></paper-icon-button>
         </div>
       </div>
     </paper-card>
@@ -41,8 +64,21 @@
       static get is() { return 'post-card'; }
       static get properties() {
         return {
-          post: Object
+          post: Object,
         }
+      }
+
+      _getDateFormat(date) {
+        return date.substr(0, 10);
+      }
+
+      _getTimeFormat(date) {
+        return date.substr(11, 8);
+      }
+
+      addClasSelected(e) {
+        if (e.target.className.indexOf(e.target.id) > 0) e.target.classList.remove(e.target.id);
+          else e.target.classList.add(e.target.id);
       }
      
     }

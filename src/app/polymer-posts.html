@@ -52,6 +52,8 @@
       }
       component-card {
         margin: 5px;
+        -webkit-transition: box-shadow 1s; /* For Safari 3.1 to 6.0 */
+        transition: box-shadow 1s;
       }
       .selected {
         box-shadow: 0px 0px 0px 2px #607D8B;
@@ -83,9 +85,9 @@
       <app-drawer-layout id="drawerLayout" force-narrow>
 
         <app-drawer slot="drawer">
-          <div class="drawer-content">
+          <div class="drawer-content" id="drawerContent">
             <div class="current-user-card">
-              <component-card class="component-card" data=[[currentUser]] posts="[[currentUser.posts]]" posts-selected="{{userSelected}}" current-user current-user-selected="{{currentUserSelected}}"></component-card>
+              <component-card class="component-card" data=[[currentUser]] posts="[[currentUser.posts]]" posts-selected="{{userSelected}}" current-user current-user-selected="{{currentUserSelected}}" on-click="addClassSelected"></component-card>
             </div>
             <template is="dom-repeat" items="[[users]]">
               <component-card class="component-card" data=[[item]] posts="[[item.posts]]" posts-selected="{{userSelected}}" on-click="addClassSelected" current-user-selected="{{currentUserSelected}}"></component-card>
@@ -182,15 +184,13 @@
           let withoutUsersNull = response.detail.response.filter( d => d != null );
           this.set('users', withoutUsersNull.filter( l => l.email != localStorage.email ));
           this.set('currentUser', withoutUsersNull.filter( a => a.email == localStorage.email )[0]);
-          console.log(this.currentUser);
-          console.log(this.users);
         }
 
         addClassSelected(e) {
-          //console.log(Polymer.dom(this).getElementsByClassName('component-card'));
-          //console.log(Polymer.dom(this).childNodes);
-          
-          //e.target.classList.add('selected');
+          for (let card of this.$.drawerContent.querySelectorAll('.selected')) {
+            card.classList.remove('selected');
+          }
+          e.target.classList.add('selected');
         }
       }
 
