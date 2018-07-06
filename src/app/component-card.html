@@ -64,10 +64,10 @@
     <template is="dom-if" if="[[!currentUser]]">
       <paper-card>
         <div class="card-content current">
-          <h1>Nombre: [[data.name]]</h1>
-          <h1>Email: [[data.email]]</h1>
-          <h1>Direccion: [[data.address]]</h1>
-          <h1>Telefono: [[data.phone]]</h1>
+          <h1>Nombre: [[_rebuild(data.name)]]</h1>
+          <h1>Email: [[_rebuild(data.email)]]</h1>
+          <h1>Direccion: [[_rebuild(data.address)]]</h1>
+          <h1>Telefono: [[_rebuild(data.phone)]]</h1>
         </div>
 
         <div class="card-actions">
@@ -114,11 +114,15 @@
       }
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('click', e =>  { 
+        this.addEventListener('click', e =>  {
           if (this.currentUser) this.set('currentUserSelected', true);
             else this.set('currentUserSelected', false);
           this.set('postsSelected', this.posts);
         });
+      }
+      _rebuild(txt){
+        return txt === undefined ? "sin datos" : txt;
+
       }
 
     }
