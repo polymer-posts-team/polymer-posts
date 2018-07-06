@@ -53,7 +53,7 @@
         <h4>Ingrese a su cuenta</h4>
       </div>
       <div class="card-content">
-        <paper-input id="userEmail" label="Email" value="{{user}}" required auto-validate pattern="[a-z0-9A-Z._%+-A-Z]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+        <paper-input id="userEmail" label="Email" value="{{userEmail}}" required auto-validate pattern="[a-z0-9A-Z._%+-A-Z]+@[a-z0-9.-]+\.[a-z]{2,3}$">
         </paper-input>
         <paper-input label="Contraseña" type="password" id="userPassword" value="{{password}}" required auto-validate></paper-input>
         <paper-button raised class="button-login center-align" id="send" on-click="validationForm" >Inicar Sesión</paper-button>
@@ -75,6 +75,8 @@
         static get is() { return 'login-posts'; }
         static get properties() {
           return {
+            userEmail: String,
+            password: String,
             session: {
               type: Boolean,
               notify: true
@@ -100,13 +102,12 @@
         sendRequest() {
           fetch('https://posts-services.herokuapp.com/users')
             .then(resp => resp.json())
-            .then(users => this.userFlux(this.getUserValid(users)));
+            .then(users => this.userFlux(this.getUserValid(users, this.userEmail, this.password)));
         }
 
-        getUserValid(users){
-          console.log(users);
+        getUserValid(users, userEmail, pasword){
           for (let user of users) {
-            if(user && user.email == this.user && user.password == this.password) {
+            if(user && user.email == userEmail && user.password == password) {
               return { 
                 valid: true,
                 email: user.email,

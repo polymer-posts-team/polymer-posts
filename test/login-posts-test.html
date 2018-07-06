@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script src="../bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
+  <link rel="import" href="/src/app/login-posts.html">
+</head>
+<body>
+  <test-fixture id="login-posts-success">
+    <template>
+      <login-posts user-email="Aniya7@yahoo.com" password="90wfZ7FeqrSsyw2"></login-posts>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="login-posts-error">
+    <template>
+      <login-posts speed="slow"></login-posts>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('Test for Login', () => {
+      let loginSuccess, loginError;
+      setup(() => {
+        loginSuccess = fixture('login-posts-success');
+        loginError = fixture('login-posts-error');
+      });
+      suite('Test for Login in success', () => {
+        test('Success Login', (done) => {
+
+          it('Debe devolver un objeto JSON', async () => {
+            var response = await fetch('https://posts-services.herokuapp.com/users');
+            expect(response[0].name).to.be.equal('Devyn Kunde');
+            // var user = await response.json();
+            // expect(user).to.be.an('Object');
+          });
+          // loginSuccess.sendRequest();
+          // done();
+
+
+
+          // assert.equal(fetch('https://posts-services.herokuapp.com/users').then(resp => resp.json()).then(users => loginSuccess.getUserValid(users, loginSuccess.userEmail, loginSuccess.password)).valid, true);
+          // expect(sliderTargetSlow.getTime(sliderTargetSlow.getValuesSpeedDirectory('slow').time)).to.be.within(6, 10);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

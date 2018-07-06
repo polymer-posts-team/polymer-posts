@@ -82,11 +82,11 @@
         </app-toolbar>
       </app-header>
 
-      <app-drawer-layout id="drawerLayout" force-narrow>
-        <app-drawer slot="drawer">
+      <app-drawer-layout id="drawerLayout">
+        <app-drawer slot="drawer" id="appDrawer">
           <div class="drawer-content" id="drawerContent">
             <div class="current-user-card">
-              <component-card class="component-card" data=[[currentUser]] posts="[[currentUser.posts]]" posts-selected="{{userSelected}}" current-user current-user-selected="{{currentUserSelected}}" on-click="addClassSelected"></component-card>
+              <component-card class="component-card selected" data=[[currentUser]] posts="[[currentUser.posts]]" posts-selected="{{userSelected}}" current-user current-user-selected="{{currentUserSelected}}" on-click="addClassSelected"></component-card>
             </div>
             <template is="dom-repeat" items="[[users]]">
               <component-card class="component-card" data=[[item]] posts="[[item.posts]]" posts-selected="{{userSelected}}" on-click="addClassSelected" current-user-selected="{{currentUserSelected}}"></component-card>
@@ -189,12 +189,13 @@
           let withoutUsersNull = data.filter( d => d != null );
           this.set('users', withoutUsersNull.filter( l => l.email != localStorage.email ));
           this.set('currentUser', withoutUsersNull.filter( a => a.email == localStorage.email )[0]);
-          this.set('currentUser.posts', withoutUsersNull.filter( a => a.email == localStorage.email )[0].posts);
+          this.set('userSelected', withoutUsersNull.filter( a => a.email == localStorage.email )[0].posts);
+          this.set('currentUserSelected', true);
         }
 
         addClassSelected(e) {
           for (let card of this.$.drawerContent.querySelectorAll('.selected')) {
-            card.classList.remove('selected');
+            if (card.classList.value.indexOf('selected') > 0) card.classList.remove('selected');
           }
           e.target.classList.add('selected');
         }
