@@ -97,7 +97,7 @@
         <div class="content-posts" >
           <template is="dom-if" if="{{currentUserSelected}}" >
             <div class="form-input">
-              <post-input></post-input>  
+              <post-input post-created="{{postCreated}}"></post-input>  
             </div>
           </template>
           
@@ -135,13 +135,15 @@
               type: Object,
               notify: true
             },
-            userSelected: Array
+            userSelected: Array,
+            postCreated: Object
           }
         }
 
         static get observers() {
           return [
-            'sessionObserver(session)'
+            'sessionObserver(session)',
+            'filterUsers(postCreated)'
           ]
         }
 
@@ -181,9 +183,14 @@
         }
 
         handleResponse(response) {
-          let withoutUsersNull = response.detail.response.filter( d => d != null );
+          this.filterUsers(response.detail.response);
+        }
+
+        filterUsers(data) {
+          let withoutUsersNull = data.filter( d => d != null );
           this.set('users', withoutUsersNull.filter( l => l.email != localStorage.email ));
           this.set('currentUser', withoutUsersNull.filter( a => a.email == localStorage.email )[0]);
+          this.set('currentUser.posts', withoutUsersNull.filter( a => a.email == localStorage.email )[0].posts);
         }
 
         addClassSelected(e) {

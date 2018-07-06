@@ -50,7 +50,7 @@
         align-items: center;
       }
     </style>
-    <template is="dom-if" if="[[currentUser]]">
+    <template is="dom-if" if="[[currentUser]]" id="repeater">
       <paper-card>
         <div class="card-content current">
           <paper-avatar class="customAvatar" icon="social:person"></paper-avatar>
@@ -64,10 +64,10 @@
     <template is="dom-if" if="[[!currentUser]]">
       <paper-card>
         <div class="card-content current">
-          <h1>Nombre: [[_rebuild(data.name)]]</h1>
-          <h1>Email: [[_rebuild(data.email)]]</h1>
-          <h1>Direccion: [[_rebuild(data.address)]]</h1>
-          <h1>Telefono: [[_rebuild(data.phone)]]</h1>
+          <h1>Nombre: [[data.name]]</h1>
+          <h1>Email: [[data.email]]</h1>
+          <h1>Direccion: [[data.address]]</h1>
+          <h1>Telefono: [[data.phone]]</h1>
         </div>
 
         <div class="card-actions">
@@ -109,9 +109,13 @@
           data: Array
         }
       }
+      
       _getPostsUser(data) {
-        if (data) return data.posts;
+        if (data) {
+          return data.posts;
+        } 
       }
+
       connectedCallback() {
         super.connectedCallback();
         this.addEventListener('click', e =>  {
@@ -120,11 +124,6 @@
           this.set('postsSelected', this.posts);
         });
       }
-      _rebuild(txt){
-        return txt === undefined ? "sin datos" : txt;
-
-      }
-
     }
 
 
