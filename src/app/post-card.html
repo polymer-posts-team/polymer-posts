@@ -1,0 +1,53 @@
+<dom-module id="post-card">
+  <template>
+    <style>
+      paper-card {
+        width: 100%;
+        margin: 10px;
+        background-color: whitesmoke;
+      }
+      .heart {
+        color: var(--paper-red-500);
+      }
+      .share {
+        color: var(--paper-blue-700); 
+      }
+      .book {
+        color: var(--paper-blue-500);
+      }
+    </style>
+    <paper-card>
+      <div class="card-content current">
+        <div class="title">
+          <h2>[[post.title]]</h2>
+        </div>
+        <div class="body">
+          <label>[[post.body]]</label>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <div class="card-actions">
+          <paper-icon-button icon="favorite" class="heart"></paper-icon-button>
+          <paper-icon-button icon="bookmark" class="book"></paper-icon-button>
+          <paper-icon-button icon="social:share" class="share"></paper-icon-button>
+        </div>
+      </div>
+    </paper-card>
+  </template>
+
+  <script>
+    class PostCard extends Polymer.Element {
+      static get is() { return 'post-card'; }
+      static get properties() {
+        return {
+          post: Object
+        }
+      }
+     
+    }
+
+
+    window.customElements.define(PostCard.is, PostCard);
+  </script>
+</dom-module>
