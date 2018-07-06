@@ -89,7 +89,7 @@
       hundle-s="json"
       content-type="application/json" 
       body="{{postear}}"
-      last-response="{{postPrueba}}">
+      last-response="{{postCreated}}">
     </iron-ajax>
     </template>
     <script>
@@ -118,13 +118,17 @@
                             //         body: {type:String}
                             //     }
                             // }
+                        },
+                        postCreated: {
+                            type: Object,
+                            notify: true
                         }
                     }
                 }
                 getPostear(title,body){
                     return {
                                  user: {
-                                     email: "Aniya7@yahoo.com"
+                                     email: localStorage.email
                                  },
                                  post: {
                                      title: title,
@@ -137,7 +141,6 @@
                 posting() {
                     this.$.peticion.generateRequest();
                 }
-
 
             }
             customElements.define(PostInput.is, PostInput)
