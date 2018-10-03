@@ -14,7 +14,7 @@
     <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}"></app-route>
 
-    <iron-pages selected="[[page]]" attr-for-selected="page" fallback-selection="login">
+    <iron-pages selected="[[page]]" attr-for-selected="page" fallback-selection="posts">
       <login-posts page="login" session="{{session}}" route="{{routeData}}"></login-posts>
       <polymer-posts page="posts" session="{{session}}" route="{{routeData}}"></polymer-posts>
     </iron-pages>
@@ -43,7 +43,7 @@
           if (this.session){
             if (page) this.page = page;
               else this.page ='posts';
-          } else this.page = 'login';
+          } else this.page = 'posts';
         }
       }
 
@@ -51,3 +51,5 @@
     })(window.customElements);
   </script>
 </dom-module>
+
+

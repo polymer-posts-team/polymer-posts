@@ -74,11 +74,11 @@
         </div>
 
         <div class="card-actions">
-          <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
-          <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
-          <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
-          <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
-          <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+          <paper-icon-button id="yellow" class="rate-icon-1" icon="star" on-click="addClasSelected"></paper-icon-button>
+          <paper-icon-button id="yellow" class="rate-icon-2" icon="star" on-click="addClasSelected"></paper-icon-button>
+          <paper-icon-button id="yellow" class="rate-icon-3" icon="star" on-click="addClasSelected"></paper-icon-button>
+          <paper-icon-button id="yellow" class="rate-icon-4" icon="star" on-click="addClasSelected"></paper-icon-button>
+          <paper-icon-button id="yellow" class="rate-icon-5" icon="star" on-click="addClasSelected"></paper-icon-button>
         </div>
       </paper-card>
     </template>
@@ -117,6 +117,10 @@
         if (data) {
           return data.posts;
         } 
+      }
+      addClasSelected(e) {
+        if (e.target.className.indexOf(e.target.id) > 0) e.target.classList.remove(e.target.id);
+          else e.target.classList.add(e.target.id);
       }
 
       connectedCallback() {
